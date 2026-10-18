@@ -772,7 +772,7 @@
   function bbox(d) {
     if (!measureSvg) {
       measureSvg = document.createElementNS(NS, 'svg');
-      measureSvg.setAttribute('style', 'position:absolute;width:0;height:0;visibility:hidden;pointer-events:none');
+      measureSvg.setAttribute('style', 'position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden');
       document.body.appendChild(measureSvg);
     }
     const p = document.createElementNS(NS, 'path');
@@ -804,28 +804,146 @@
     return icon.model;
   }
 
+  /* Solid 모델: 채울 면 / 안쪽에서 투명하게 뚫을 선 / 바깥에 그대로 둘 선
+     - 열린 path라도 닫는 선이 다른 도형의 가장자리와 겹치면(엄지+소매처럼) 면으로 채움
+     - 다른 면의 안쪽이거나 면끼리 맞닿는 선은 투명하게 뚫음 */
+  function getSolidModel(icon) {
+    if (icon.solidModel) return icon.solidModel;
+    let m = null;
+    try { m = buildSolid(icon); } catch (e) { console.warn(e); m = null; }
+    if (!m) {
+      m = { fills: [], knock: [], strokes: [] };
+      icon.shapes.forEach(s => s.subs.forEach(x => (x.closed ? m.fills : m.strokes).push({ d: x.d, t: s.transform })));
+    }
+    return (icon.solidModel = m);
+  }
+
+  function buildSolid(icon) {
+    if (icon.shapes.some(s => s.transform)) return null;
+    bbox('M0 0');
+    const host = measureSvg, made = [];
+    const mk = d => {
+      const p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d); p.setAttribute('fill', '#000'); p.setAttribute('stroke', '#000'); p.setAttribute('stroke-width', '3');
+      host.appendChild(p); made.push(p); return p;
+    };
+    const close = d => (/[Zz]\s*$/.test(d) ? d : d + 'Z');
+    const pt = (el, l) => { const q = el.getPointAtLength(l); return new DOMPoint(q.x, q.y); };
+    const r2 = v => Math.round(v * 100) / 100;
+    const sample = el => {
+      const L = el.getTotalLength(), n = Math.max(2, Math.ceil(L / 2)), out = [];
+      for (let i = 0; i <= n; i++) out.push(pt(el, L * i / n));
+      return out;
+    };
+    const toD = (pts, flags, want, minPts = 1) => {
+      let d = '', run = [];
+      const flush = () => {
+        if (run.length >= minPts) { d += 'M' + run.map(q => `${r2(q.x)} ${r2(q.y)}`).join('L'); if (run.length === 1) d += 'l0.01 0'; }
+        run = [];
+      };
+      pts.forEach((q, i) => { if (flags[i] === want) run.push(q); else flush(); });
+      flush(); return d;
+    };
+
+    try {
+      const subs = [];
+      icon.shapes.forEach(s => s.subs.forEach(x => subs.push(x)));
+      const pieces = subs.filter(x => x.closed).map(x => { const d = close(x.d); const el = mk(d); return { d, el, outline: el }; });
+      const lines = [];
+      const inFill = (q, skip) => pieces.some(B => B !== skip && B.el.isPointInFill(q));
+      const onEdge = (q, skip) => pieces.some(B => B !== skip && B.el.isPointInStroke(q));
+
+      // 열린 path 중, 다른 면 뒤로 숨은 사각형처럼 '면'으로 채워야 하는 것을 찾음
+      //  · 닫는 선이 다른 도형의 가장자리/안쪽에 거의 겹치고
+      //  · path 자체는 대부분 다른 도형 바깥에 있을 때
+      subs.filter(x => !x.closed).forEach(x => {
+        const el = mk(x.d), L = el.getTotalLength();
+        if (L > 0 && pieces.length) {
+          const a = pt(el, 0), b = pt(el, L);
+          if (Math.hypot(a.x - b.x, a.y - b.y) > 5) {
+            let hit = 0; const n = 12;
+            for (let i = 0; i <= n; i++) {
+              const q = new DOMPoint(a.x + (b.x - a.x) * i / n, a.y + (b.y - a.y) * i / n);
+              if (inFill(q) || onEdge(q)) hit++;
+            }
+            const pp = sample(el);
+            const outside = pp.filter(q => !inFill(q)).length / pp.length;
+            if (hit / (n + 1) >= 0.75 && outside >= 0.5) {
+              const d = close(x.d); pieces.push({ d, el: mk(d), outline: el }); return;
+            }
+          }
+        }
+        lines.push({ d: x.d, el });
+      });
+
+      const knock = [], strokes = [];
+      // 면의 외곽선: 다른 면과 맞닿거나 다른 면 안쪽에 있는 부분만 투명하게 뚫음
+      pieces.forEach(A => {
+        const pts = sample(A.outline);
+        const flags = pts.map(q => inFill(q, A) || onEdge(q, A));
+        const d = toD(pts, flags, true); if (d) knock.push({ d, t: '' });
+      });
+      // 열린 선: 면 안쪽(경계 포함) 부분은 뚫고, 바깥으로 나온 부분만 선으로 유지
+      lines.forEach(Lx => {
+        const pts = sample(Lx.el);
+        const flags = pts.map(q => inFill(q) || onEdge(q));
+        if (!flags.some(Boolean)) { strokes.push({ d: Lx.d, t: '' }); return; }
+        const kd = toD(pts, flags, true); if (kd) knock.push({ d: kd, t: '' });
+        const sd = toD(pts, flags, false, 6); if (sd) strokes.push({ d: sd, t: '' });   // 경계에 찍히는 점 제거
+      });
+      return { fills: pieces.map(p => ({ d: p.d, t: '' })), knock, strokes };
+    } finally {
+      made.forEach(e => e.remove());
+    }
+  }
+
   /* ══════════════════════════════════════════
      3. 렌더링
      ══════════════════════════════════════════ */
-  function renderIcon(icon, o) {
+  const NO_SOLID = new Set(['search']);   // Solid 스타일을 적용하지 않을 아이콘
+
+  function renderIcon(icon, o0) {
+    const o = (o0.style === 'solid' && NO_SOLID.has(icon.name)) ? { ...o0, style: 'outline' } : o0;
     const size = o.size, color = o.color;
     if (icon.type === 'fill') return renderFillType(icon, size, color);
 
     let body = '';
-    if (o.style !== 'outline') {
-      const op = o.style === 'duotone' ? ' fill-opacity=".22"' : '';
-      const m = getModel(icon);
-      if (m.valid && m.fillD) {
-        body += `  <path d="${m.fillD}" fill="${color}"${op} fill-rule="evenodd" stroke="none"/>\n`;
-      } else {
-        m.pieces.forEach(p => {
-          body += `  <path d="${p.d}"${p.transform ? ` transform="${p.transform}"` : ''} fill="${color}"${op} stroke="none"/>\n`;
-        });
+    const tr = s => (s.transform ? ` transform="${s.transform}"` : '');
+
+    if (o.style === 'solid') {
+      // 안쪽을 전부 채우고, 외곽선과 안쪽 선은 투명(뚫림)으로 처리. 바깥으로 나온 열린 선만 선으로 유지
+      const m = getSolidModel(icon);
+      const t = x => (x.t ? ` transform="${x.t}"` : '');
+      let defs = '', attr = '';
+      if (m.knock.length) {
+        const id = 'k' + (++maskSeq);
+        const [vx, vy, vw, vh] = icon.vb.split(/[\s,]+/).map(Number);
+        defs = `  <mask id="${id}" maskUnits="userSpaceOnUse" x="${vx}" y="${vy}" width="${vw}" height="${vh}">\n` +
+               `    <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="#fff" stroke="none"/>\n` +
+               m.knock.map(k => `    <path d="${k.d}"${t(k)} fill="none" stroke="#000"/>\n`).join('') +
+               `  </mask>\n`;
+        attr = ` mask="url(#${id})"`;
       }
+      body += defs;
+      if (m.fills.length) {
+        body += `  <g${attr} fill="${color}" stroke="none">\n` + m.fills.map(f => `    <path d="${f.d}"${t(f)}/>\n`).join('') + `  </g>\n`;
+      }
+      m.strokes.forEach(x => { body += `  <path d="${x.d}"${t(x)}/>\n`; });
+    } else {
+      if (o.style === 'duotone') {
+        const m = getModel(icon);
+        if (m.valid && m.fillD) {
+          body += `  <path d="${m.fillD}" fill="${color}" fill-opacity=".22" fill-rule="evenodd" stroke="none"/>\n`;
+        } else {
+          m.pieces.forEach(p => {
+            body += `  <path d="${p.d}"${p.transform ? ` transform="${p.transform}"` : ''} fill="${color}" fill-opacity=".22" stroke="none"/>\n`;
+          });
+        }
+      }
+      icon.shapes.forEach(s => {
+        body += `  <path d="${s.subs.map(x => x.d).join('')}"${tr(s)}${s.filled ? ` fill="${color}"` : ''}/>\n`;
+      });
     }
-    icon.shapes.forEach(s => {
-      body += `  <path d="${s.subs.map(x => x.d).join('')}"${s.transform ? ` transform="${s.transform}"` : ''}${s.filled ? ` fill="${color}"` : ''}/>\n`;
-    });
     return `<svg xmlns="${NS}" width="${size}" height="${size}" viewBox="${icon.vb}" fill="none" stroke="${color}" stroke-width="${o.stroke}" stroke-linecap="round" stroke-linejoin="round">\n${body}</svg>`;
   }
 
@@ -849,6 +967,7 @@
     return new XMLSerializer().serializeToString(svg);
   }
 
+  let maskSeq = 0;
   const opts = () => state.cfg;
 
   /* ══════════════════════════════════════════
@@ -946,6 +1065,9 @@
     if (icon.type === 'fill') {
       note.hidden = false;
       note.textContent = '이 아이콘은 선(stroke)이 아닌 채움형 SVG라서 색상과 크기만 적용돼요. 스타일·선 두께 설정은 영향이 없어요.';
+    } else if (NO_SOLID.has(icon.name) && o.style === 'solid') {
+      note.hidden = false;
+      note.textContent = '이 아이콘은 Solid 스타일이 적용되지 않아요. Outline으로 표시됩니다.';
     } else note.hidden = true;
   }
 
