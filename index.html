@@ -1,681 +1,1103 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AirBlix 아이콘 라이브러리</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AirBlix — SVG Icon Library</title>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Google Sans Flex 폰트 불러오기 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300;400;500;600;700;800&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --ink:#000000;
+    --ink-2:#333333;
+    --muted:#666666;
+    --line:#e8e8e8;
+    --line-2:#d9d9d9;
+    --soft:#f5f5f5;
+    --soft-2:#fafafa;
+    --accent:#ec4899;
+    --radius:16px;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 12px 28px -14px rgba(0,0,0,.16);
+    --wrap:1152px;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; min-height:100vh; display:flex; flex-direction:column;
+    font-family:'Google Sans Flex','Google Sans','Noto Sans KR',system-ui,-apple-system,'Segoe UI',sans-serif;
+    color:var(--ink); background:var(--bg); -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none}
+  button{font:inherit; color:inherit; cursor:pointer}
+  .wrap{width:100%; max-width:var(--wrap); margin:0 auto; padding:0 24px}
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Google Sans Flex"', '"Google Sans"', 'Inter', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            surface: '#F8FAFC',
-            panel: '#FFFFFF',
-            border: '#E2E8F0',
-            borderDark: '#CBD5E1',
-            brand: '#0F172A',
-            brandHover: '#1E293B',
-            subtext: '#64748B',
-            hoverBg: '#F1F5F9'
-          }
-        }
-      }
-    }
-  </script>
+  /* ───────── Header ───────── */
+  .site-header{position:sticky; top:0; z-index:40; background:rgba(255,255,255,.78); backdrop-filter:saturate(180%) blur(14px); -webkit-backdrop-filter:saturate(180%) blur(14px); border-bottom:1px solid transparent; transition:border-color .2s}
+  .site-header.scrolled{border-bottom-color:var(--line)}
+  .bar{height:68px; display:flex; align-items:center; justify-content:space-between}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; letter-spacing:-.02em}
+  .brand-mark{width:30px; height:30px; border-radius:9px; background:var(--ink); color:#fff; display:grid; place-items:center; font-size:13px; font-weight:700; letter-spacing:-.04em}
+  .nav{display:flex; gap:4px}
+  .nav a{padding:8px 14px; border-radius:999px; font-size:14px; font-weight:500; color:var(--muted); display:flex; align-items:center; gap:8px; transition:background .15s,color .15s}
+  .nav a:hover{color:var(--ink); background:var(--soft)}
+  .nav a.active{color:var(--ink); background:var(--soft)}
+  .pill{font-size:11px; font-weight:600; background:var(--ink); color:#fff; border-radius:999px; padding:2px 7px; line-height:1.4}
 
-  <style>
-    body {
-      font-family: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
-      background-color: #F8FAFC;
-      color: #0F172A;
-      -webkit-font-smoothing: antialiased;
-    }
+  main{flex:1; width:100%}
+  .page{animation:fade .35s ease both}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
 
-    /* 단색 커스텀 슬라이더 */
-    input[type="range"] {
-      accent-color: #0F172A;
-    }
+  /* ───────── Buttons ───────── */
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; height:44px; padding:0 20px; border-radius:12px; border:1px solid var(--line-2); background:#fff; font-size:14px; font-weight:600; transition:transform .12s, background .15s, border-color .15s, box-shadow .15s}
+  .btn:hover{background:var(--soft-2); border-color:#c4c4c4}
+  .btn:active{transform:scale(.98)}
+  .btn.primary{background:var(--ink); border-color:var(--ink); color:#fff}
+  .btn.primary:hover{background:#222222}
+  .btn.sm{height:38px; padding:0 14px; font-size:13px; border-radius:10px}
+  .btn svg{width:16px; height:16px}
 
-    /* SVG 투명 배경용 패턴 */
-    .bg-checkerboard {
-      background-image: linear-gradient(45deg, #f1f5f9 25%, transparent 25%), 
-                        linear-gradient(-45deg, #f1f5f9 25%, transparent 25%), 
-                        linear-gradient(45deg, transparent 75%, #f1f5f9 75%), 
-                        linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
-      background-size: 16px 16px;
-      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
-    }
+  /* ───────── Home ───────── */
+  .hero{position:relative; padding:72px 24px 24px; text-align:center}
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; padding:6px 14px 6px 10px; border:1px solid var(--line); border-radius:999px; background:#fff; font-size:12.5px; font-weight:500; color:var(--ink-2); box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .eyebrow i{width:8px; height:8px; border-radius:50%; background:var(--accent)}
+  h1{margin:22px auto 0; max-width:780px; font-size:clamp(38px,6.4vw,68px); line-height:1.08; letter-spacing:-.045em; font-weight:700}
+  h1 span{color:var(--muted)}
+  .lead{margin:20px auto 0; max-width:560px; color:var(--muted); font-size:clamp(15px,2vw,18px); line-height:1.65}
+  .cta{margin-top:32px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
 
-    /* 스크롤바 정돈 */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #F8FAFC;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #CBD5E1;
-      border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94A3B8;
-    }
-  </style>
+  .showcase{margin:52px auto 0; max-width:880px; padding:18px; border:1px solid var(--line); border-radius:28px; background:linear-gradient(180deg,#fff,var(--soft-2)); box-shadow:var(--shadow)}
+  .tiles{display:grid; grid-template-columns:repeat(6,1fr); gap:12px}
+  .tile{aspect-ratio:1; border-radius:18px; background:#fff; border:1px solid var(--line); display:grid; place-items:center; animation:float 6s ease-in-out infinite}
+  .tile:nth-child(3n+2){animation-delay:-2s}
+  .tile:nth-child(3n){animation-delay:-4s}
+  .tile.ghost{background:var(--soft); border-style:dashed}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  .stats{max-width:880px; margin:40px auto 0; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; text-align:left}
+  .stat{padding:20px 22px; border:1px solid var(--line); border-radius:var(--radius); background:#fff}
+  .stat b{display:block; font-size:30px; letter-spacing:-.03em}
+  .stat span{display:block; margin-top:4px; font-size:13px; color:var(--muted)}
+
+  .features{max-width:880px; margin:12px auto 0; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; text-align:left}
+  .feature{padding:22px; border-radius:var(--radius); background:var(--soft); }
+  .feature .ico{width:38px; height:38px; border-radius:11px; background:#fff; border:1px solid var(--line); display:grid; place-items:center; margin-bottom:14px}
+  .feature .ico svg{width:19px; height:19px}
+  .feature h3{margin:0 0 6px; font-size:15px; letter-spacing:-.01em}
+  .feature p{margin:0; font-size:13.5px; line-height:1.6; color:var(--muted)}
+
+  /* ───────── Icons page ───────── */
+  .page-head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; padding:40px 0 22px; flex-wrap:wrap}
+  .page-head h2{margin:0; font-size:32px; letter-spacing:-.035em}
+  .page-head p{margin:8px 0 0; color:var(--muted); font-size:14px}
+  code,.mono{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
+  .page-head code{background:var(--soft); border:1px solid var(--line); padding:1px 7px; border-radius:6px; font-size:12.5px; color:var(--ink)}
+  .count{font-size:13px; font-weight:600; color:var(--muted)}
+
+  .panel{border:1px solid var(--line); border-radius:20px; padding:16px; background:#fff; box-shadow:var(--shadow)}
+  .search-row{display:flex; gap:10px}
+  .search{position:relative; flex:1}
+  .search svg{position:absolute; left:14px; top:50%; transform:translateY(-50%); width:17px; height:17px; color:var(--muted)}
+  .search input{width:100%; height:46px; border-radius:12px; border:1px solid var(--line-2); background:var(--soft-2); padding:0 44px 0 42px; font:inherit; font-size:14.5px; color:var(--ink); outline:none; transition:border-color .15s, box-shadow .15s, background .15s}
+  .search input:focus{background:#fff; border-color:var(--ink)}
+  .kbd{position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--muted); border:1px solid var(--line-2); border-radius:6px; padding:2px 7px; background:#fff; pointer-events:none}
+  .clear{position:absolute; right:8px; top:50%; transform:translateY(-50%); width:30px; height:30px; border:0; background:transparent; border-radius:8px; display:none; place-items:center; color:var(--muted)}
+  .clear:hover{background:var(--soft)}
+  .clear svg{position:static; transform:none; width:15px; height:15px}
+  .search.has-q .clear{display:grid}
+  .search.has-q .kbd{display:none}
+
+  .controls{margin-top:16px; padding-top:16px; border-top:1px solid var(--line); display:grid; grid-template-columns:auto 1fr 1fr 1.25fr; gap:22px; align-items:start}
+  .field label{display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:var(--muted); margin-bottom:10px; letter-spacing:.01em}
+  .field label b{color:var(--ink); font-weight:600; font-family:ui-monospace,Menlo,monospace}
+  .seg{display:inline-flex; padding:3px; gap:2px; background:var(--soft); border-radius:11px}
+  .seg button{border:0; background:transparent; padding:8px 13px; border-radius:8px; font-size:13px; font-weight:600; color:var(--muted); transition:all .15s}
+  .seg button.on{background:#fff; color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  input[type=range]{width:100%; height:38px; accent-color:var(--ink); cursor:pointer; margin:0}
+  .color-row{display:flex; align-items:center; gap:10px}
+  .color-box{display:flex; align-items:center; gap:8px; height:38px; padding:0 10px 0 6px; border:1px solid var(--line-2); border-radius:10px; background:#fff; min-width:0; flex:1}
+  .color-box input[type=color]{width:26px; height:26px; border:0; padding:0; background:none; cursor:pointer; border-radius:7px}
+  .color-box input[type=text]{border:0; outline:0; width:100%; min-width:0; font:inherit; font-family:ui-monospace,Menlo,monospace; font-size:13px; color:var(--ink); background:transparent}
+  .swatches{display:flex; gap:6px}
+  .swatch{width:22px; height:22px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px var(--line-2); padding:0; transition:transform .12s}
+  .swatch:hover{transform:scale(1.15)}
+
+  .grid{margin-top:20px; display:grid; grid-template-columns:repeat(auto-fill,minmax(136px,1fr)); gap:12px}
+  .cell{position:relative}
+  .card{width:100%; height:128px; border:1px solid var(--line); border-radius:16px; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:12px 8px 10px; transition:transform .15s, box-shadow .15s, border-color .15s}
+  .card:hover{transform:translateY(-3px); border-color:var(--line-2); box-shadow:var(--shadow)}
+  .card:focus-visible{outline:2px solid var(--ink); outline-offset:2px}
+  .card .glyph{flex:1; display:grid; place-items:center; min-height:0}
+  .card .glyph svg{display:block; max-width:100%; max-height:64px}
+  .card .nm{font-size:12px; font-weight:500; color:var(--muted); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .card:hover .nm{color:var(--ink)}
+  .mini{position:absolute; top:8px; right:8px; width:28px; height:28px; border:0; border-radius:8px; background:var(--soft); display:grid; place-items:center; color:var(--muted); opacity:0; transition:opacity .15s}
+  .cell:hover .mini,.mini:focus-visible{opacity:1}
+  .mini:hover{background:var(--line); color:var(--ink)}
+  .mini svg{width:14px; height:14px}
+  .skel{height:128px; border-radius:16px; background:linear-gradient(90deg,var(--soft) 25%,#ececec 50%,var(--soft) 75%); background-size:200% 100%; animation:shimmer 1.3s infinite}
+  @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+
+  .empty{margin-top:20px; border:1px dashed var(--line-2); border-radius:20px; padding:44px 24px; text-align:center; background:var(--soft-2)}
+  .empty .big{width:52px; height:52px; margin:0 auto 16px; border-radius:16px; background:#fff; border:1px solid var(--line); display:grid; place-items:center}
+  .empty .big svg{width:24px; height:24px; color:var(--muted)}
+  .empty h3{margin:0; font-size:18px; letter-spacing:-.02em}
+  .empty p{margin:10px auto 0; max-width:520px; color:var(--muted); font-size:14px; line-height:1.65}
+  .empty pre{display:inline-block; margin:14px 0 0; padding:10px 14px; border-radius:10px; background:var(--ink); color:#e5e5e5; font-size:12.5px; text-align:left}
+  .empty .row{margin-top:22px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+
+  /* ───────── Modal ───────── */
+  .modal{position:fixed; inset:0; z-index:80; display:grid; place-items:center; padding:20px; background:rgba(0,0,0,.42); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); opacity:0; pointer-events:none; transition:opacity .18s}
+  .modal.open{opacity:1; pointer-events:auto}
+  .sheet{width:100%; max-width:540px; max-height:calc(100vh - 40px); overflow:auto; background:#fff; border-radius:24px; padding:22px; box-shadow:0 30px 80px -20px rgba(0,0,0,.45); transform:translateY(14px) scale(.98); transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+  .modal.open .sheet{transform:none}
+  .sheet-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px}
+  .sheet-head h3{margin:0; font-size:18px; letter-spacing:-.02em}
+  .sheet-head p{margin:4px 0 0; font-size:12.5px; color:var(--muted)}
+  .icon-btn{width:36px; height:36px; border:0; border-radius:10px; background:var(--soft); display:grid; place-items:center; color:var(--ink-2)}
+  .icon-btn:hover{background:var(--line)}
+  .icon-btn svg{width:17px; height:17px}
+  .preview{margin-top:18px; min-height:190px; border-radius:18px; border:1px solid var(--line); display:grid; place-items:center; padding:24px}
+  .checker{background-color:#fff; background-image:linear-gradient(45deg,#f1f1f1 25%,transparent 25%),linear-gradient(-45deg,#f1f1f1 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#f1f1f1 75%),linear-gradient(-45deg,transparent 75%,#f1f1f1 75%); background-size:18px 18px; background-position:0 0,0 9px,9px -9px,-9px 0}
+  .note{margin-top:12px; font-size:12.5px; line-height:1.55; color:#8a5a00; background:#fff7e6; border:1px solid #ffe1a6; padding:10px 12px; border-radius:10px}
+  .code-head{margin-top:18px; display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:var(--muted)}
+  .sheet pre{margin:8px 0 0; padding:14px; border-radius:14px; background:var(--ink); color:#e5e5e5; font-size:12px; line-height:1.6; max-height:150px; overflow:auto; white-space:pre-wrap; word-break:break-all}
+  .actions{margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:10px}
+
+
+  /* ───────── Terms ───────── */
+  .doc{max-width:760px; padding-bottom:8px}
+  .doc .meta{margin:8px 0 0; color:var(--muted); font-size:14px}
+  .doc h3{margin:40px 0 10px; font-size:18px; letter-spacing:-.02em}
+  .doc p,.doc li{font-size:15px; line-height:1.8; color:var(--ink-2)}
+  .doc p{margin:0 0 10px}
+  .doc ol,.doc ul{margin:0 0 10px; padding-left:22px}
+  .doc li{margin:4px 0}
+  .doc .box{margin-top:28px; padding:16px 18px; border:1px solid var(--line); border-radius:14px; background:var(--soft-2); font-size:14px; color:var(--ink-2); line-height:1.7}
+
+  /* ───────── Toast / drop ───────── */
+  .toast{position:fixed; left:50%; bottom:28px; z-index:100; display:flex; align-items:center; gap:10px; padding:12px 18px; border-radius:999px; background:var(--ink); color:#fff; font-size:13.5px; font-weight:500;  transform:translate(-50%,24px); opacity:0; pointer-events:none; transition:all .22s}
+  .toast.show{transform:translate(-50%,0); opacity:1}
+  .toast svg{width:16px; height:16px; color:#4ade80}
+  .drop{position:fixed; inset:12px; z-index:90; border:2px dashed var(--ink); border-radius:28px; background:rgba(255,255,255,.88); display:grid; place-items:center; font-size:20px; font-weight:600; letter-spacing:-.02em; opacity:0; pointer-events:none; transition:opacity .15s}
+  .drop.on{opacity:1}
+
+  /* ───────── Footer ───────── */
+  .site-footer{margin-top:96px; background:#fff}
+  .foot-top{padding-top:32px; display:flex; align-items:center; justify-content:space-between; gap:20px}
+  .foot-logo{display:inline-flex; align-items:center}
+  .foot-logo img{display:block; height:32px; width:auto}
+  .foot-links{display:flex; gap:28px; font-size:14px; font-weight:500; color:var(--ink)}
+  .foot-links a:hover{opacity:.65}
+  .foot-name{margin:28px 0 0; font-size:16px; font-weight:700; color:#000}
+  .foot-copy{margin:12px 0 0; font-size:14px; color:#5f6368; line-height:1.6}
+  .foot-divider{margin-top:40px; height:1px; background:var(--line)}
+  .foot-bottom{padding:22px 0 30px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:13px; color:#5f6368}
+  .cf{display:inline-flex; align-items:center; gap:8px; font-weight:500}
+  .cf svg{width:22px; height:auto; display:block}
+
+  /* ───────── Responsive ───────── */
+  @media (max-width:900px){
+    .controls{grid-template-columns:1fr 1fr}
+    .controls .field:first-child,.controls .field:last-child{grid-column:1 / -1}
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 18px}
+    .hero{padding-top:44px}
+    .tiles{grid-template-columns:repeat(4,1fr); gap:10px}
+    .tiles .tile:nth-child(n+9){display:none}
+    .stats,.features{grid-template-columns:1fr}
+    .controls{grid-template-columns:1fr}
+    .search-row .btn span{display:none}
+    .search-row .btn{padding:0 14px}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr)); gap:10px}
+    .card{height:112px}
+    .mini{opacity:1}
+    .foot-top{align-items:flex-start}
+    .foot-logo img{height:28px}
+    .foot-links{gap:18px}
+    .actions{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important}
+  }
+</style>
 </head>
-<body class="min-h-screen flex flex-col antialiased bg-surface">
+<body>
 
-  <!-- 상단 네비게이션 바 -->
-  <header class="bg-white border-b border-border sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      
-      <!-- 로고 (단색 타이포그래피) -->
-      <button id="nav-logo" class="flex items-center gap-3 text-left focus:outline-none">
-        <div class="w-8 h-8 bg-brand text-white flex items-center justify-center rounded-lg font-bold text-sm tracking-tight">
-          AB
+<!-- ═════════ Header ═════════ -->
+<header class="site-header" id="header">
+  <div class="wrap bar">
+    <a class="brand" href="#/" aria-label="AirBlix 홈">
+      <span class="brand-mark">AB</span>
+      <span>AirBlix</span>
+    </a>
+    <nav class="nav" aria-label="주요 메뉴">
+      <a href="#/" data-route="home">홈</a>
+      <a href="#/icons" data-route="icons">아이콘 <span class="pill" id="nav-count">0</span></a>
+      <a href="#/terms" data-route="terms">약관</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ═════════ Home ═════════ -->
+  <section id="page-home" class="page">
+    <div class="wrap">
+      <div class="hero">
+        <span class="eyebrow"><i></i> SVG Icon System</span>
+        <h1>모던한 아이콘,<br><span>한곳에서 바로 쓰세요.</span></h1>
+        <p class="lead"><code style="font-size:.9em">icons/</code> 폴더의 SVG를 그대로 불러와서 색상·크기·두께·스타일을 실시간으로 바꾸고 코드를 복사하거나 내려받을 수 있어요.</p>
+        <div class="cta">
+          <a class="btn primary" href="#/icons">
+            아이콘 둘러보기
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <button class="btn" type="button" data-pick="files">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            SVG 추가
+          </button>
         </div>
-        <div>
-          <span class="text-base font-bold text-brand tracking-tight block leading-none">AirBlix</span>
-          <span class="text-[10px] text-subtext font-medium">SVG Icon Library</span>
+
+        <div class="showcase"><div class="tiles" id="hero-tiles"></div></div>
+
+        <div class="stats">
+          <div class="stat"><b id="stat-count">–</b><span>불러온 아이콘</span></div>
+          <div class="stat"><b>3</b><span>스타일 · Outline / Duotone / Solid</span></div>
+          <div class="stat"><b>SVG</b><span>코드 복사 · 파일 다운로드</span></div>
         </div>
-      </button>
 
-      <!-- PC 네비게이션 탭 -->
-      <nav class="hidden md:flex items-center gap-1">
-        <button id="nav-btn-home" class="nav-tab px-4 py-2 text-xs font-semibold rounded-lg text-brand bg-hoverBg transition-colors">
-          홈
-        </button>
-        <button id="nav-btn-icons" class="nav-tab px-4 py-2 text-xs font-semibold rounded-lg text-subtext hover:text-brand hover:bg-hoverBg transition-colors">
-          아이콘 목록
-        </button>
-      </nav>
-
-      <!-- 모바일 메뉴 버튼 -->
-      <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-lg text-brand hover:bg-hoverBg">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-
+        <div class="features">
+          <div class="feature">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+            <h3>폴더 그대로 연동</h3>
+            <p>하드코딩 없이 <code>icons/</code> 안의 SVG 파일만 보여줍니다.</p>
+          </div>
+          <div class="feature">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></div>
+            <h3>자연스러운 채우기</h3>
+            <p>도형 안쪽 구멍과 열린 선을 구분해서 깔끔하게 채워요.</p>
+          </div>
+          <div class="feature">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
+            <h3>반응형</h3>
+            <p>PC와 모바일 어디서든 편하게 탐색할 수 있어요.</p>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <!-- 모바일 드로어 (Drawer) -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-border bg-white px-4 py-3 space-y-1">
-      <button id="mobile-btn-home" class="w-full text-left px-3 py-2 text-xs font-semibold rounded-lg text-brand bg-hoverBg">홈</button>
-      <button id="mobile-btn-icons" class="w-full text-left px-3 py-2 text-xs font-semibold rounded-lg text-subtext hover:text-brand hover:bg-hoverBg">아이콘 목록</button>
-    </div>
-  </header>
+  <!-- ═════════ Icons ═════════ -->
+  <section id="page-icons" class="page" hidden>
+    <div class="wrap">
 
-  <!-- 메인 콘텐트 컨테이너 -->
-  <main class="flex-1 w-full flex flex-col">
-
-    <!-- ================= 1. 홈 화면 (랜딩) ================= -->
-    <section id="page-home" class="flex-1 flex flex-col items-center justify-center px-4 py-16 sm:py-24 text-center max-w-4xl mx-auto w-full transition-opacity duration-200">
-      
-      <!-- 메인 브랜딩 타이포그래피 (단색, 그라데이션 없음) -->
-      <div class="mb-4">
-        <span class="inline-block px-3 py-1 rounded-full bg-hoverBg border border-border text-[11px] font-semibold text-subtext uppercase tracking-wider mb-6">
-          Official SVG Design System
-        </span>
-        <h1 class="text-5xl sm:text-7xl font-extrabold text-brand tracking-tight mb-4">
-          AirBlix
-        </h1>
-        <p class="text-base sm:text-lg text-subtext font-normal max-w-2xl mx-auto leading-relaxed">
-          모던하고 정교하게 설계된 AirBlix 아이콘 시스템입니다.<br class="hidden sm:inline">
-          웹 및 모바일 프로젝트를 위한 고품질 SVG 아이콘들을 실시간으로 커스텀하여 활용해 보세요.
-        </p>
-      </div>
-
-      <!-- CTA 버튼 -->
-      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
-        <button id="hero-cta-btn" class="w-full sm:w-auto px-8 py-3.5 bg-brand hover:bg-brandHover text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 group">
-          <span>아이콘 보기</span>
-          <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-        </button>
-      </div>
-
-      <!-- 주요 특징 요약 바 -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-16 w-full text-left">
-        <div class="p-4 rounded-xl border border-border bg-white">
-          <div class="text-xs font-bold text-brand mb-1">인라인 SVG 코드</div>
-          <div class="text-xs text-subtext leading-normal">의존성 없이 어디서나 곧바로 복사해 사용할 수 있습니다.</div>
-        </div>
-        <div class="p-4 rounded-xl border border-border bg-white">
-          <div class="text-xs font-bold text-brand mb-1">실시간 스타일 커스텀</div>
-          <div class="text-xs text-subtext leading-normal">색상, 크기, 두께, 외곽선 및 채우기 스타일을 자유롭게 조절합니다.</div>
-        </div>
-        <div class="p-4 rounded-xl border border-border bg-white">
-          <div class="text-xs font-bold text-brand mb-1">반응형 라이브러리</div>
-          <div class="text-xs text-subtext leading-normal">PC와 모바일 디바이스에 완벽하게 최적화되어 있습니다.</div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ================= 2. 아이콘 탐색 화면 ================= -->
-    <section id="page-icons" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full transition-opacity duration-200">
-      
-      <!-- 섹션 헤더 -->
-      <div class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-2">
+      <div class="page-head">
         <div>
-          <h2 class="text-2xl font-bold text-brand tracking-tight">아이콘 라이브러리</h2>
-          <p class="text-xs text-subtext mt-1">AirBlix 프로젝트의 <code class="bg-hoverBg px-1.5 py-0.5 rounded text-brand font-mono border border-border">icons/</code> 자산 모음입니다.</p>
+          <h2>아이콘 라이브러리</h2>
+          <p><code>icons/</code> 폴더의 SVG 파일을 불러옵니다.</p>
         </div>
-        <div id="icon-count" class="text-xs font-semibold text-subtext">총 0개의 아이콘</div>
+        <div class="count" id="icon-count"></div>
       </div>
 
-      <!-- 컨트롤바 (Search & Customizer) -->
-      <div class="bg-white rounded-xl border border-border p-4 sm:p-5 mb-6 space-y-4 shadow-sm">
-        
-        <!-- 상단: 검색 및 스타일 모드 -->
-        <div class="flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center">
-          
-          <!-- 검색창 -->
-          <div class="relative flex-1">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-subtext">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </div>
-            <input type="text" id="search-input" placeholder="아이콘 이름 검색 (예: home, user, search, settings)..." class="w-full pl-9 pr-8 py-2 bg-white border border-border rounded-lg text-xs font-normal focus:outline-none focus:border-brand transition-colors">
-            <button id="clear-search" class="absolute inset-y-0 right-0 pr-3 flex items-center text-subtext hover:text-brand hidden">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      <div class="panel">
+        <div class="search-row">
+          <div class="search" id="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="search" type="text" placeholder="아이콘 이름 검색" autocomplete="off" spellcheck="false">
+            <span class="kbd">/</span>
+            <button class="clear" id="clear" type="button" aria-label="검색어 지우기">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
             </button>
           </div>
-
-          <!-- 스타일 선택 토글 -->
-          <div class="flex items-center bg-hoverBg p-1 rounded-lg border border-border self-start md:self-auto w-full md:w-auto">
-            <button data-style="outline" class="style-btn flex-1 md:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all bg-white text-brand border border-border shadow-sm">외곽선 (Outline)</button>
-            <button data-style="solid" class="style-btn flex-1 md:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-md text-subtext hover:text-brand transition-all">채우기 (Solid)</button>
-          </div>
-
+          <button class="btn" type="button" data-pick="files" style="height:46px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>SVG 추가</span>
+          </button>
         </div>
 
-        <div class="border-t border-border pt-4"></div>
-
-        <!-- 하단: 크기, 두께, 색상 컨트롤 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 items-center">
-          
-          <!-- 크기 슬라이더 -->
-          <div class="space-y-1.5">
-            <div class="flex justify-between text-xs font-medium text-subtext">
-              <span>크기 (Size)</span>
-              <span id="size-val" class="text-brand font-semibold font-mono">24px</span>
+        <div class="controls">
+          <div class="field">
+            <label>스타일</label>
+            <div class="seg" id="style-seg">
+              <button type="button" data-style="outline" class="on">Outline</button>
+              <button type="button" data-style="duotone">Duotone</button>
+              <button type="button" data-style="solid">Solid</button>
             </div>
-            <input type="range" id="size-slider" min="16" max="64" value="24" class="w-full h-1.5 bg-hoverBg rounded-lg appearance-none cursor-pointer">
           </div>
-
-          <!-- 선 두께 슬라이더 -->
-          <div id="stroke-control" class="space-y-1.5">
-            <div class="flex justify-between text-xs font-medium text-subtext">
-              <span>선 두께 (Stroke)</span>
-              <span id="stroke-val" class="text-brand font-semibold font-mono">2.0px</span>
-            </div>
-            <input type="range" id="stroke-slider" min="0.5" max="3" step="0.1" value="2.0" class="w-full h-1.5 bg-hoverBg rounded-lg appearance-none cursor-pointer">
+          <div class="field">
+            <label>크기 <b id="size-val">28px</b></label>
+            <input id="size" type="range" min="16" max="64" step="1" value="28">
           </div>
-
-          <!-- 색상 지정 -->
-          <div class="space-y-1.5 sm:col-span-2 lg:col-span-1">
-            <div class="flex justify-between text-xs font-medium text-subtext">
-              <span>색상 (Color)</span>
-              <span id="color-val" class="text-brand font-mono font-semibold">#0F172A</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="relative flex-1 flex items-center border border-border rounded-lg p-1 bg-white">
-                <input type="color" id="color-picker" value="#0F172A" class="w-6 h-6 rounded cursor-pointer border-0 p-0 bg-transparent">
-                <input type="text" id="color-text" value="#0F172A" class="ml-2 w-full text-xs font-mono border-0 focus:outline-none text-brand">
+          <div class="field">
+            <label>선 두께 <b id="stroke-val">1.75</b></label>
+            <input id="stroke" type="range" min="0.5" max="3" step="0.05" value="1.75">
+          </div>
+          <div class="field">
+            <label>색상</label>
+            <div class="color-row">
+              <div class="color-box">
+                <input id="color" type="color" value="#000000">
+                <input id="color-text" type="text" value="#000000" maxlength="7" spellcheck="false">
               </div>
-              
-              <!-- 퀵 팔레트 -->
-              <div class="flex items-center gap-1.5">
-                <button data-color="#0F172A" class="swatch w-5 h-5 rounded bg-[#0F172A] border border-border hover:scale-105 transition-transform" title="Dark Slate"></button>
-                <button data-color="#2563EB" class="swatch w-5 h-5 rounded bg-[#2563EB] hover:scale-105 transition-transform" title="Blue"></button>
-                <button data-color="#059669" class="swatch w-5 h-5 rounded bg-[#059669] hover:scale-105 transition-transform" title="Emerald"></button>
-                <button data-color="#DC2626" class="swatch w-5 h-5 rounded bg-[#DC2626] hover:scale-105 transition-transform" title="Red"></button>
-                <button data-color="#7C3AED" class="swatch w-5 h-5 rounded bg-[#7C3AED] hover:scale-105 transition-transform" title="Purple"></button>
+              <div class="swatches" id="swatches">
+                <button class="swatch" type="button" data-color="#000000" style="background:#000000" title="Ink"></button>
+                <button class="swatch" type="button" data-color="#2563EB" style="background:#2563EB" title="Blue"></button>
+                <button class="swatch" type="button" data-color="#059669" style="background:#059669" title="Emerald"></button>
+                <button class="swatch" type="button" data-color="#E11D48" style="background:#E11D48" title="Rose"></button>
+                <button class="swatch" type="button" data-color="#EC4899" style="background:#EC4899" title="Pink"></button>
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
 
-      <!-- 아이콘 그리드 -->
-      <div id="icon-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        <!-- 동적 삽입 -->
-      </div>
-
-      <!-- 검색 결과 없음 -->
-      <div id="empty-state" class="hidden text-center py-16 bg-white rounded-xl border border-border">
-        <svg class="w-10 h-10 text-subtext mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <h3 class="text-sm font-semibold text-brand">검색된 아이콘이 없습니다</h3>
-        <p class="text-xs text-subtext mt-1">다른 키워드로 검색해 보세요.</p>
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- 푸터 -->
-  <footer class="bg-white border-t border-border py-6 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-subtext">
-      AirBlix SVG Icon System &copy; 2026. All rights reserved.
+      <div id="status"></div>
+      <div class="grid" id="grid"></div>
     </div>
-  </footer>
+  </section>
 
-  <!-- 아이콘 상세보기 모달 -->
-  <div id="icon-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 opacity-0 pointer-events-none transition-opacity duration-150">
-    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-border transform scale-95 transition-transform duration-150" id="modal-card">
-      
-      <!-- 헤더 -->
-      <div class="flex justify-between items-start mb-4">
-        <div>
-          <h3 id="modal-title" class="text-base font-bold text-brand tracking-tight">icons/home.svg</h3>
-          <p class="text-xs text-subtext">AirBlix SVG 자산</p>
+  <!-- ═════════ Terms ═════════ -->
+  <section id="page-terms" class="page" hidden>
+    <div class="wrap">
+      <div class="page-head" style="flex-direction:column; align-items:flex-start; gap:0">
+        <h2>이용약관</h2>
+        <p class="meta" style="margin-top:8px">시행일: 2026년 10월 18일</p>
+      </div>
+      <article class="doc">
+        <h3>제1조 (목적)</h3>
+        <p>이 약관은 CorerepubliX(이하 “운영자”)가 제공하는 AirBlix SVG 아이콘 라이브러리 서비스(이하 “서비스”)의 이용과 관련하여 운영자와 이용자 간의 권리, 의무 및 책임사항을 정하는 것을 목적으로 합니다.</p>
+
+        <h3>제2조 (용어의 정의)</h3>
+        <ol>
+          <li>“서비스”란 운영자가 웹을 통해 제공하는 SVG 아이콘 탐색, 스타일 변경, 코드 복사 및 파일 다운로드 기능을 말합니다.</li>
+          <li>“이용자”란 이 약관에 따라 서비스를 이용하는 모든 사람을 말합니다.</li>
+          <li>“아이콘”이란 서비스를 통해 제공되는 SVG 형식의 그래픽 자산을 말합니다.</li>
+        </ol>
+
+        <h3>제3조 (약관의 효력 및 변경)</h3>
+        <ol>
+          <li>이 약관은 서비스 화면에 게시함으로써 효력이 발생합니다.</li>
+          <li>운영자는 필요한 경우 관련 법령을 위반하지 않는 범위에서 약관을 변경할 수 있으며, 변경된 약관은 시행일 및 변경 사유와 함께 서비스 화면에 게시합니다.</li>
+          <li>변경된 약관 게시 이후에도 서비스를 계속 이용하는 경우 변경된 약관에 동의한 것으로 봅니다.</li>
+        </ol>
+
+        <h3>제4조 (서비스의 내용)</h3>
+        <ol>
+          <li>운영자는 아이콘의 미리보기, 검색, 색상·크기·선 두께·스타일 조정, SVG 코드 복사 및 .svg 파일 다운로드 기능을 제공합니다.</li>
+          <li>서비스는 별도의 회원가입 없이 이용할 수 있습니다.</li>
+          <li>운영자는 서비스의 일부 또는 전부를 운영상·기술상 필요에 따라 변경하거나 중단할 수 있습니다.</li>
+        </ol>
+
+        <h3>제5조 (아이콘의 이용 범위)</h3>
+        <ol>
+          <li>이용자는 서비스에서 제공하는 아이콘을 개인 및 상업적 프로젝트에 사용할 수 있습니다. 다만 별도의 라이선스가 표기된 아이콘은 해당 표기를 따릅니다.</li>
+          <li>이용자는 아이콘 자체를 그대로 또는 일부만 수정하여 아이콘 모음, 템플릿 등의 형태로 재판매하거나 재배포할 수 없습니다.</li>
+          <li>이용자는 아이콘을 불법적이거나 타인의 권리를 침해하는 용도, 또는 사회질서에 반하는 용도로 사용해서는 안 됩니다.</li>
+          <li>아이콘에 대한 저작권 및 기타 지식재산권은 운영자 또는 정당한 권리자에게 있습니다.</li>
+        </ol>
+
+        <h3>제6조 (이용자가 추가한 파일)</h3>
+        <ol>
+          <li>이용자가 “SVG 추가”, 폴더 선택 또는 드래그 앤 드롭으로 불러온 파일은 이용자의 브라우저 안에서만 처리되며 운영자의 서버로 전송되거나 저장되지 않습니다.</li>
+          <li>이용자는 자신이 불러오는 파일에 대한 적법한 권리를 가지고 있어야 하며, 이로 인해 발생하는 분쟁의 책임은 이용자에게 있습니다.</li>
+        </ol>
+
+        <h3>제7조 (이용자의 의무)</h3>
+        <p>이용자는 다음 행위를 해서는 안 됩니다.</p>
+        <ul>
+          <li>서비스의 정상적인 운영을 방해하는 행위(과도한 자동 요청, 취약점 악용 등)</li>
+          <li>서비스의 일부를 무단으로 복제·변조하거나 운영자의 명의를 도용하는 행위</li>
+          <li>관련 법령 또는 이 약관을 위반하는 행위</li>
+        </ul>
+
+        <h3>제8조 (개인정보 및 보안)</h3>
+        <ol>
+          <li>서비스는 이용자의 개인정보를 별도로 수집하지 않습니다.</li>
+          <li>서비스는 안정적인 제공과 보안을 위해 Cloudflare의 보안 서비스를 이용하며, 이 과정에서 접속 정보(IP 주소 등)가 해당 사업자의 정책에 따라 처리될 수 있습니다.</li>
+          <li>서비스 화면의 글꼴은 Google Fonts에서 불러오며, 이 과정에서 이용자의 접속 정보가 Google에 전달될 수 있습니다.</li>
+        </ol>
+
+        <h3>제9조 (면책)</h3>
+        <ol>
+          <li>서비스와 아이콘은 “있는 그대로” 제공되며, 운영자는 특정 목적에 대한 적합성이나 무오류성을 보증하지 않습니다.</li>
+          <li>운영자는 천재지변, 통신 장애 등 운영자가 통제할 수 없는 사유로 인한 서비스 중단에 대해 책임지지 않습니다.</li>
+          <li>운영자는 이용자가 서비스를 이용하여 얻은 결과물 또는 이용자 상호 간 분쟁에 대하여 책임지지 않습니다. 다만 운영자의 고의 또는 중대한 과실로 인한 경우는 예외로 합니다.</li>
+        </ol>
+
+        <h3>제10조 (준거법 및 분쟁 해결)</h3>
+        <p>이 약관은 대한민국 법령에 따라 해석되며, 서비스와 관련하여 분쟁이 발생한 경우 민사소송법상 관할 법원에 소를 제기할 수 있습니다.</p>
+
+        <div class="box">
+          <b>운영자 정보</b><br>
+          상호: CorerepubliX · 대표자: sj_w0n_<br>
+          약관에 관한 문의는 하단의 “문의” 메뉴를 이용해 주세요.
         </div>
-        <button id="close-modal" class="p-1 rounded text-subtext hover:text-brand hover:bg-hoverBg transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
+      </article>
+    </div>
+  </section>
+</main>
 
-      <!-- 미리보기 -->
-      <div class="bg-checkerboard border border-border rounded-lg p-8 flex items-center justify-center mb-5 min-h-[160px]">
-        <div id="modal-preview-container"></div>
-      </div>
+<!-- ═════════ Footer (모든 페이지 공통) ═════════ -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <a class="foot-logo" href="https://corerepublix.co.kr" target="_blank" rel="noopener" aria-label="CorerepubliX">
+        <img src="https://corerepublix.co.kr/logo-color.png" width="209" height="32" alt="CorerepubliX" referrerpolicy="no-referrer"
+             onerror="if(!this.dataset.t){this.dataset.t=1;this.src='logo-color.png'}else{this.onerror=null}">
+      </a>
+      <nav class="foot-links" aria-label="푸터 메뉴">
+        <a href="https://corerepublix.co.kr/team" target="_blank" rel="noopener">팀</a>
+        <a href="https://corerepublix.co.kr/contact" target="_blank" rel="noopener">문의</a>
+      </nav>
+    </div>
 
-      <!-- SVG 코드 미리보기 -->
-      <div class="mb-5">
-        <div class="flex justify-between items-center mb-1">
-          <label class="block text-xs font-semibold text-subtext">SVG 코드</label>
-          <span class="text-[10px] text-subtext font-mono">icons/</span>
-        </div>
-        <pre id="modal-code" class="bg-[#0F172A] text-zinc-100 p-3 rounded-lg text-xs font-mono overflow-x-auto max-h-32 select-all border border-border"></pre>
-      </div>
+    <p class="foot-name">CorerepubliX</p>
+    <p class="foot-copy">© 2026 CorerepubliX. All rights reserved. CPU 사용을 즐겁게 — 소프트웨어로.</p>
 
-      <!-- 버튼 영역 -->
-      <div class="grid grid-cols-2 gap-2.5">
-        <button id="modal-copy-code" class="px-4 py-2.5 bg-brand hover:bg-brandHover text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-          SVG 코드 복사
-        </button>
-        <button id="modal-download" class="px-4 py-2.5 bg-white hover:bg-hoverBg text-brand border border-border font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          .SVG 다운로드
-        </button>
-      </div>
-
+    <div class="foot-divider"></div>
+    <div class="foot-bottom">
+      <span>대표자: sj_w0n_</span>
+      <span class="cf">
+        <svg viewBox="0 0 32 14" aria-hidden="true">
+          <path d="M26.2 13H4.6A3.9 3.9 0 0 1 4 5.3a6.2 6.2 0 0 1 11.6-1.9A5.4 5.4 0 0 1 22 7.2a3 3 0 0 1 4.2 5.8z" fill="#F6821F"/>
+          <path d="M31.4 13h-6.6a2.6 2.6 0 0 0 .5-4.9A4 4 0 0 1 28.4 7a3.6 3.6 0 0 1 3 6z" fill="#FBAD41"/>
+        </svg>
+        Security by Cloudflare
+      </span>
     </div>
   </div>
+</footer>
 
-  <!-- Toast 알림 -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-brand text-white px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2.5 border border-slate-800 transform translate-y-10 opacity-0 transition-all duration-200 pointer-events-none">
-    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-    <span id="toast-message" class="text-xs font-medium">클립보드에 복사되었습니다.</span>
+<!-- ═════════ Modal ═════════ -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="sheet-head">
+      <div>
+        <h3 id="m-title" class="mono"></h3>
+        <p id="m-sub"></p>
+      </div>
+      <button class="icon-btn" id="m-close" type="button" aria-label="닫기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="preview checker"><div id="m-preview"></div></div>
+    <div class="note" id="m-note" hidden></div>
+    <div class="code-head"><span>SVG 코드</span><span id="m-meta" class="mono"></span></div>
+    <pre id="m-code"></pre>
+    <div class="actions">
+      <button class="btn primary" id="m-copy" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+        SVG 코드 복사
+      </button>
+      <button class="btn" id="m-dl" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>
+        .svg 다운로드
+      </button>
+    </div>
   </div>
+</div>
 
-  <!-- 자바스크립트 로직 -->
-  <script>
-    // AirBlix 기본 SVG 아이콘 라이브러리 데이터셋 (28개 이상)
-    const AIRBLIX_ICONS = [
-      { name: 'home', path: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-      { name: 'search', path: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
-      { name: 'user', path: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-      { name: 'settings', path: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
-      { name: 'heart', path: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
-      { name: 'bell', path: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' },
-      { name: 'star', path: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z' },
-      { name: 'trash', path: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' },
-      { name: 'edit', path: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
-      { name: 'plus', path: 'M12 4v16m8-8H4' },
-      { name: 'check', path: 'M5 13l4 4L19 7' },
-      { name: 'arrow-right', path: 'M14 5l7 7m0 0l-7 7m7-7H3' },
-      { name: 'arrow-left', path: 'M10 19l-7-7m0 0l7-7m-7 7h18' },
-      { name: 'download', path: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' },
-      { name: 'share', path: 'M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z' },
-      { name: 'lock', path: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
-      { name: 'camera', path: 'M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z M15 13a3 3 0 11-6 0 3 3 0 016 0z' },
-      { name: 'cloud', path: 'M3 15a4 4 0 004 4h9a5 5 0 001.09-9.88 5 5 0 00-9.28-2.68A5 5 0 003 15z' },
-      { name: 'code', path: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4' },
-      { name: 'globe', path: 'M21 12a9 9 0 11-18 0 9 9 0 0118 0z M3.6 9h16.8M3.6 15h16.8M12 3a15.3 15.3 0 014 9 15.3 15.3 0 01-4 9 15.3 15.3 0 01-4-9 15.3 15.3 0 014-9z' },
-      { name: 'folder', path: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
-      { name: 'file-text', path: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-      { name: 'mail', path: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
-      { name: 'calendar', path: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
-      { name: 'bookmark', path: 'M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z' },
-      { name: 'volume', path: 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z' },
-      { name: 'sun', path: 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z' },
-      { name: 'moon', path: 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z' },
-      { name: 'shield', path: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' }
-    ];
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+  <span id="toast-msg"></span>
+</div>
+<div class="drop" id="drop">SVG 파일을 여기에 놓아 추가</div>
 
-    // 애플리케이션 상태
-    let currentPage = 'home';
-    let config = {
-      size: 24,
-      strokeWidth: 2.0,
-      color: '#0F172A',
-      style: 'outline',
-      search: ''
-    };
-    let activeModalIcon = null;
+<input type="file" id="pick-files" accept=".svg,image/svg+xml" multiple hidden>
+<input type="file" id="pick-folder" webkitdirectory multiple hidden>
 
-    // DOM 엘리먼트 참조
-    const pageHome = document.getElementById('page-home');
-    const pageIcons = document.getElementById('page-icons');
-    const heroCtaBtn = document.getElementById('hero-cta-btn');
-    
-    const navLogo = document.getElementById('nav-logo');
-    const navBtnHome = document.getElementById('nav-btn-home');
-    const navBtnIcons = document.getElementById('nav-btn-icons');
-    
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileBtnHome = document.getElementById('mobile-btn-home');
-    const mobileBtnIcons = document.getElementById('mobile-btn-icons');
+<script>
+(() => {
+  'use strict';
 
-    const iconGrid = document.getElementById('icon-grid');
-    const emptyState = document.getElementById('empty-state');
-    const iconCount = document.getElementById('icon-count');
-    
-    const searchInput = document.getElementById('search-input');
-    const clearSearchBtn = document.getElementById('clear-search');
-    const sizeSlider = document.getElementById('size-slider');
-    const sizeVal = document.getElementById('size-val');
-    const strokeSlider = document.getElementById('stroke-slider');
-    const strokeVal = document.getElementById('stroke-val');
-    const strokeControl = document.getElementById('stroke-control');
-    const colorPicker = document.getElementById('color-picker');
-    const colorText = document.getElementById('color-text');
-    const colorVal = document.getElementById('color-val');
+  const NS = 'http://www.w3.org/2000/svg';
+  const ICON_DIR = 'icons/';
 
-    // 모달 DOM
-    const modal = document.getElementById('icon-modal');
-    const modalCard = document.getElementById('modal-card');
-    const modalTitle = document.getElementById('modal-title');
-    const modalPreview = document.getElementById('modal-preview-container');
-    const modalCode = document.getElementById('modal-code');
-    const closeModalBtn = document.getElementById('close-modal');
-    const modalCopyBtn = document.getElementById('modal-copy-code');
-    const modalDownloadBtn = document.getElementById('modal-download');
+  const state = {
+    icons: [],
+    loading: true,
+    cfg: { size: 28, stroke: 1.75, color: '#000000', style: 'outline', q: '' },
+    active: null
+  };
 
-    // 앱 초기화
-    function init() {
-      bindEvents();
-      renderGrid();
-    }
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  const rnd = n => Math.round(n * 1000) / 1000;
 
-    // 페이지 전환
-    function navigateTo(page) {
-      currentPage = page;
-      if (page === 'home') {
-        pageHome.classList.remove('hidden');
-        pageIcons.classList.add('hidden');
-        
-        // 탭 스타일 업데이트
-        navBtnHome.className = "nav-tab px-4 py-2 text-xs font-semibold rounded-lg text-brand bg-hoverBg transition-colors";
-        navBtnIcons.className = "nav-tab px-4 py-2 text-xs font-semibold rounded-lg text-subtext hover:text-brand hover:bg-hoverBg transition-colors";
-        
-        mobileBtnHome.className = "w-full text-left px-3 py-2 text-xs font-semibold rounded-lg text-brand bg-hoverBg";
-        mobileBtnIcons.className = "w-full text-left px-3 py-2 text-xs font-semibold rounded-lg text-subtext hover:text-brand hover:bg-hoverBg";
-      } else {
-        pageHome.classList.add('hidden');
-        pageIcons.classList.remove('hidden');
-        
-        // 탭 스타일 업데이트
-        navBtnIcons.className = "nav-tab px-4 py-2 text-xs font-semibold rounded-lg text-brand bg-hoverBg transition-colors";
-        navBtnHome.className = "nav-tab px-4 py-2 text-xs font-semibold rounded-lg text-subtext hover:text-brand hover:bg-hoverBg transition-colors";
+  /* ══════════════════════════════════════════
+     1. 아이콘 폴더 읽기 (하드코딩 없음)
+     ══════════════════════════════════════════ */
+  async function discoverFiles() {
+    const base = new URL(ICON_DIR, document.baseURI);
 
-        mobileBtnIcons.className = "w-full text-left px-3 py-2 text-xs font-semibold rounded-lg text-brand bg-hoverBg";
-        mobileBtnHome.className = "w-full text-left px-3 py-2 text-xs font-semibold rounded-lg text-subtext hover:text-brand hover:bg-hoverBg";
-      }
-      mobileMenu.classList.add('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // SVG 코드 마크업 생성
-    function generateSVGMarkup(icon, overrideSize = null) {
-      const sz = overrideSize || config.size;
-      const stroke = config.strokeWidth;
-      const col = config.color;
-
-      let fillAttr = "none";
-      let strokeAttr = col;
-
-      if (config.style === 'solid') {
-        fillAttr = col;
-        strokeAttr = "none";
-      }
-
-      return `<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="${fillAttr}" stroke="${strokeAttr}" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round">
-  <path d="${icon.path}" />
-</svg>`;
-    }
-
-    // 아이콘 그리드 렌더링
-    function renderGrid() {
-      const query = config.search.toLowerCase().trim();
-      const filtered = AIRBLIX_ICONS.filter(icon => icon.name.toLowerCase().includes(query));
-
-      iconCount.textContent = `총 ${filtered.length}개의 아이콘`;
-
-      if (filtered.length === 0) {
-        iconGrid.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      iconGrid.innerHTML = filtered.map((icon, idx) => {
-        const svgCode = generateSVGMarkup(icon);
-        return `
-          <div data-index="${idx}" class="icon-card group relative bg-white border border-border hover:border-brand rounded-xl p-3.5 flex flex-col items-center justify-between gap-3 cursor-pointer transition-all hover:shadow-sm">
-            <div class="w-full flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onclick="event.stopPropagation(); copySVGName('${icon.name}')" title="이름 복사" class="p-1 text-subtext hover:text-brand rounded hover:bg-hoverBg">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-              </button>
-            </div>
-            <div class="icon-svg-container my-auto flex items-center justify-center min-h-[52px]">
-              ${svgCode}
-            </div>
-            <span class="text-[11px] font-medium text-subtext group-hover:text-brand truncate w-full text-center">
-              ${icon.name}
-            </span>
-          </div>
-        `;
-      }).join('');
-
-      // 이벤트 바인딩
-      document.querySelectorAll('.icon-card').forEach(card => {
-        card.addEventListener('click', () => {
-          const idx = card.getAttribute('data-index');
-          openModal(filtered[idx]);
-        });
-      });
-    }
-
-    // 모달 관리
-    function openModal(icon) {
-      activeModalIcon = icon;
-      modalTitle.textContent = `icons/${icon.name}.svg`;
-      updateModalContent();
-      
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      modalCard.classList.remove('scale-95');
-      modalCard.classList.add('scale-100');
-    }
-
-    function closeModal() {
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      modalCard.classList.remove('scale-100');
-      modalCard.classList.add('scale-95');
-      activeModalIcon = null;
-    }
-
-    function updateModalContent() {
-      if (!activeModalIcon) return;
-      modalPreview.innerHTML = generateSVGMarkup(activeModalIcon, 64);
-      modalCode.textContent = generateSVGMarkup(activeModalIcon);
-    }
-
-    // Toast 알림
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toast-message');
-      toastMsg.textContent = msg;
-      
-      toast.classList.remove('translate-y-10', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-
-      setTimeout(() => {
-        toast.classList.add('translate-y-10', 'opacity-0');
-        toast.classList.remove('translate-y-0', 'opacity-100');
-      }, 2000);
-    }
-
-    // 클립보드 복사 함수
-    function copyToClipboard(text, message = "클립보드에 복사되었습니다.") {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
+    // (a) 매니페스트: icons/index.json 등 — 파일명 배열
+    for (const m of ['index.json', 'manifest.json', 'icons.json']) {
       try {
-        document.execCommand('copy');
-        showToast(message);
-      } catch (err) {
-        console.error('복사 실패', err);
-      }
-      document.body.removeChild(textArea);
+        const res = await fetch(new URL(m, base), { cache: 'no-cache' });
+        if (!res.ok) continue;
+        let data = await res.json();
+        if (data && !Array.isArray(data)) data = data.icons || data.files || [];
+        if (!Array.isArray(data)) continue;
+        const names = data
+          .map(e => typeof e === 'string' ? e : (e && (e.file || e.path || e.name)))
+          .filter(Boolean)
+          .map(n => String(n).split('/').pop())
+          .map(n => /\.svg$/i.test(n) ? n : n + '.svg');
+        if (names.length) return [...new Set(names)];
+      } catch (_) { /* 다음 방법 시도 */ }
     }
 
-    window.copySVGName = function(name) {
-      copyToClipboard(`icons/${name}.svg`, `"${name}" 아이콘 파일명이 복사되었습니다.`);
+    // (b) 서버 디렉터리 목록(autoindex) 파싱
+    try {
+      const res = await fetch(base, { cache: 'no-cache' });
+      if (res.ok) {
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const names = $$('a[href]', doc)
+          .map(a => a.getAttribute('href'))
+          .filter(h => h && /\.svg(\?.*)?$/i.test(h))
+          .map(h => decodeURIComponent(h.split('?')[0].split('/').pop()));
+        if (names.length) return [...new Set(names)];
+      }
+    } catch (_) {}
+
+    return [];
+  }
+
+  async function fetchAll(files) {
+    const base = new URL(ICON_DIR, document.baseURI);
+    const out = [];
+    let i = 0;
+    async function worker() {
+      while (i < files.length) {
+        const f = files[i++];
+        try {
+          const res = await fetch(new URL(encodeURIComponent(f), base));
+          if (!res.ok) continue;
+          const icon = parseIcon(f.replace(/\.svg$/i, ''), await res.text());
+          if (icon) out.push(icon);
+        } catch (_) {}
+      }
+    }
+    await Promise.all(Array.from({ length: 8 }, worker));
+    return out;
+  }
+
+  async function loadIcons() {
+    state.loading = true; renderAll();
+    try {
+      const files = await discoverFiles();
+      if (files.length) state.icons = sortIcons(await fetchAll(files));
+    } catch (e) { console.warn(e); }
+    state.loading = false; renderAll();
+  }
+
+  async function addLocalFiles(fileList) {
+    const files = [...fileList].filter(f => /\.svg$/i.test(f.name));
+    if (!files.length) { toast('SVG 파일을 찾지 못했어요'); return; }
+    const map = new Map(state.icons.map(i => [i.name, i]));
+    let added = 0;
+    for (const f of files) {
+      try {
+        const icon = parseIcon(f.name.replace(/\.svg$/i, ''), await f.text());
+        if (icon) { map.set(icon.name, icon); added++; }
+      } catch (_) {}
+    }
+    state.icons = sortIcons([...map.values()]);
+    state.loading = false;
+    renderAll();
+    toast(`${added}개의 아이콘을 불러왔어요`);
+  }
+
+  const sortIcons = a => a.sort((x, y) => x.name.localeCompare(y.name, 'en', { numeric: true }));
+
+  /* ══════════════════════════════════════════
+     2. SVG 파싱 / 정리
+     ══════════════════════════════════════════ */
+  function sanitize(root) {
+    $$('script,foreignObject,iframe,object,embed', root).forEach(e => e.remove());
+    [root, ...$$('*', root)].forEach(el => {
+      [...el.attributes].forEach(a => {
+        if (/^on/i.test(a.name) || (/href/i.test(a.name) && /^\s*javascript:/i.test(a.value))) el.removeAttribute(a.name);
+      });
+    });
+  }
+
+  const NONE = /^(none|transparent)$/i;
+
+  function parseIcon(name, text) {
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+    if (doc.querySelector('parsererror')) return null;
+    const svg = doc.documentElement;
+    if (!svg || svg.localName !== 'svg') return null;
+    sanitize(svg);
+
+    let vb = svg.getAttribute('viewBox');
+    if (!vb) {
+      const w = parseFloat(svg.getAttribute('width')), h = parseFloat(svg.getAttribute('height'));
+      vb = (w && h) ? `0 0 ${w} ${h}` : '0 0 24 24';
+    }
+    const icon = { name, vb, svg, type: 'fill', shapes: null, model: null };
+
+    const hasStroke = [svg, ...$$('*', svg)].some(el => {
+      const s = el.getAttribute('stroke');
+      return (s && !NONE.test(s)) || /stroke\s*:\s*(?!none)/i.test(el.getAttribute('style') || '');
+    });
+    const unsupported = svg.querySelector('defs,clipPath,mask,linearGradient,radialGradient,pattern,image,text,use,filter,style,symbol,marker');
+
+    if (hasStroke && !unsupported) {
+      try {
+        const shapes = flatten(svg);
+        if (shapes.length) { icon.shapes = shapes; icon.type = 'stroke'; }
+      } catch (_) { /* 채움형(원본 유지)으로 처리 */ }
+    }
+    return icon;
+  }
+
+  /* ── path 파서: 서브패스로 분리 (닫힘 여부 판별) ── */
+  function parsePath(d) {
+    let i = 0; const n = d.length;
+    const skip = () => { while (i < n && /[\s,]/.test(d[i])) i++; };
+    const num = () => {
+      skip();
+      const m = /^[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/.exec(d.slice(i));
+      if (!m) throw new Error('number');
+      i += m[0].length; return parseFloat(m[0]);
+    };
+    const flag = () => { skip(); const c = d[i]; if (c !== '0' && c !== '1') throw new Error('flag'); i++; return +c; };
+    const counts = { M:2, L:2, H:1, V:1, C:6, S:4, Q:4, T:2, A:7 };
+
+    const subs = [];
+    let cur = null, cx = 0, cy = 0, sx = 0, sy = 0, cmd = null;
+
+    const finalize = () => {
+      if (cur && !cur.closed && Math.hypot(cx - sx, cy - sy) < 0.01) cur.closed = true;
+    };
+    const begin = (x, y) => {
+      finalize();
+      cur = { d: `M${rnd(x)} ${rnd(y)}`, closed: false, segs: 0 };
+      subs.push(cur); sx = x; sy = y;
     };
 
-    // 이벤트 리스너 바인딩
-    function bindEvents() {
-      // 네비게이션 이동
-      navLogo.addEventListener('click', () => navigateTo('home'));
-      navBtnHome.addEventListener('click', () => navigateTo('home'));
-      navBtnIcons.addEventListener('click', () => navigateTo('icons'));
-      heroCtaBtn.addEventListener('click', () => navigateTo('icons'));
-
-      // 모바일 메뉴
-      mobileMenuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-      });
-      mobileBtnHome.addEventListener('click', () => navigateTo('home'));
-      mobileBtnIcons.addEventListener('click', () => navigateTo('icons'));
-
-      // 검색
-      searchInput.addEventListener('input', (e) => {
-        config.search = e.target.value;
-        clearSearchBtn.classList.toggle('hidden', !config.search);
-        renderGrid();
-      });
-
-      clearSearchBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        config.search = '';
-        clearSearchBtn.classList.add('hidden');
-        renderGrid();
-      });
-
-      // 크기 슬라이더
-      sizeSlider.addEventListener('input', (e) => {
-        config.size = parseInt(e.target.value);
-        sizeVal.textContent = `${config.size}px`;
-        renderGrid();
-        updateModalContent();
-      });
-
-      // 선 두께 슬라이더
-      strokeSlider.addEventListener('input', (e) => {
-        config.strokeWidth = parseFloat(e.target.value);
-        strokeVal.textContent = `${config.strokeWidth.toFixed(1)}px`;
-        renderGrid();
-        updateModalContent();
-      });
-
-      // 색상 선택
-      const updateColor = (val) => {
-        config.color = val;
-        colorPicker.value = val;
-        colorText.value = val;
-        colorVal.textContent = val;
-        renderGrid();
-        updateModalContent();
-      };
-
-      colorPicker.addEventListener('input', (e) => updateColor(e.target.value));
-      colorText.addEventListener('change', (e) => updateColor(e.target.value));
-
-      document.querySelectorAll('.swatch').forEach(btn => {
-        btn.addEventListener('click', () => updateColor(btn.getAttribute('data-color')));
-      });
-
-      // 스타일 선택 토글
-      document.querySelectorAll('.style-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.style-btn').forEach(b => {
-            b.classList.remove('bg-white', 'text-brand', 'border', 'border-border', 'shadow-sm');
-            b.classList.add('text-subtext');
-          });
-          btn.classList.add('bg-white', 'text-brand', 'border', 'border-border', 'shadow-sm');
-          btn.classList.remove('text-subtext');
-
-          config.style = btn.getAttribute('data-style');
-          
-          if (config.style === 'solid') {
-            strokeControl.classList.add('opacity-40', 'pointer-events-none');
-          } else {
-            strokeControl.classList.remove('opacity-40', 'pointer-events-none');
-          }
-
-          renderGrid();
-          updateModalContent();
-        });
-      });
-
-      // 모달 닫기
-      closeModalBtn.addEventListener('click', closeModal);
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-      });
-
-      // SVG 코드 복사
-      modalCopyBtn.addEventListener('click', () => {
-        if (activeModalIcon) {
-          copyToClipboard(generateSVGMarkup(activeModalIcon), "SVG 코드가 클립보드에 복사되었습니다.");
+    while (true) {
+      skip(); if (i >= n) break;
+      const ch = d[i];
+      if (/[A-Za-z]/.test(ch)) {
+        cmd = ch; i++;
+        if (cmd === 'Z' || cmd === 'z') {
+          if (cur) { cur.d += 'Z'; cur.closed = true; }
+          cx = sx; cy = sy; cur = null; continue;
         }
-      });
+        if (!counts[cmd.toUpperCase()]) throw new Error('cmd');
+      } else if (!cmd || cmd === 'Z' || cmd === 'z') throw new Error('bad path');
 
-      // 파일 다운로드
-      modalDownloadBtn.addEventListener('click', () => {
-        if (!activeModalIcon) return;
-        const svgData = generateSVGMarkup(activeModalIcon);
-        const blob = new Blob([svgData], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${activeModalIcon.name}.svg`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        showToast(`${activeModalIcon.name}.svg 다운로드 완료`);
+      const up = cmd.toUpperCase(), rel = cmd !== up;
+      const a = [];
+      if (up === 'A') a.push(num(), num(), num(), flag(), flag(), num(), num());
+      else for (let k = 0; k < counts[up]; k++) a.push(num());
+
+      if (up === 'M') {
+        const x = rel ? cx + a[0] : a[0], y = rel ? cy + a[1] : a[1];
+        begin(x, y); cx = x; cy = y;
+        cmd = rel ? 'l' : 'L';
+        continue;
+      }
+      if (!cur) begin(cx, cy);
+
+      let ex, ey;
+      if (up === 'H') { ex = rel ? cx + a[0] : a[0]; ey = cy; }
+      else if (up === 'V') { ey = rel ? cy + a[0] : a[0]; ex = cx; }
+      else {
+        ex = rel ? cx + a[a.length - 2] : a[a.length - 2];
+        ey = rel ? cy + a[a.length - 1] : a[a.length - 1];
+      }
+      cur.d += cmd + a.map(rnd).join(' ');
+      cur.segs++;
+      cx = ex; cy = ey;
+    }
+    finalize();
+    return subs.filter(s => s.segs > 0 || s.closed).map(s => ({ d: s.d, closed: s.closed }));
+  }
+
+  function shapeToSubs(el) {
+    const g = (k, def = 0) => { const v = parseFloat(el.getAttribute(k)); return isNaN(v) ? def : v; };
+    switch (el.localName) {
+      case 'path': return parsePath(el.getAttribute('d') || '');
+      case 'circle': {
+        const cx = g('cx'), cy = g('cy'), r = g('r'); if (!r) return [];
+        return [{ d: `M${rnd(cx - r)} ${rnd(cy)}a${r} ${r} 0 1 0 ${rnd(2 * r)} 0a${r} ${r} 0 1 0 ${rnd(-2 * r)} 0Z`, closed: true }];
+      }
+      case 'ellipse': {
+        const cx = g('cx'), cy = g('cy'), rx = g('rx'), ry = g('ry'); if (!rx || !ry) return [];
+        return [{ d: `M${rnd(cx - rx)} ${rnd(cy)}a${rx} ${ry} 0 1 0 ${rnd(2 * rx)} 0a${rx} ${ry} 0 1 0 ${rnd(-2 * rx)} 0Z`, closed: true }];
+      }
+      case 'rect': {
+        const x = g('x'), y = g('y'), w = g('width'), h = g('height'); if (!w || !h) return [];
+        let rx = el.getAttribute('rx'), ry = el.getAttribute('ry');
+        rx = rx !== null ? parseFloat(rx) : (ry !== null ? parseFloat(ry) : 0);
+        ry = ry !== null ? parseFloat(ry) : rx;
+        rx = Math.min(rx || 0, w / 2); ry = Math.min(ry || 0, h / 2);
+        if (!rx && !ry) return [{ d: `M${x} ${y}h${w}v${h}h${-w}Z`, closed: true }];
+        return [{ d: `M${rnd(x + rx)} ${y}h${rnd(w - 2 * rx)}a${rx} ${ry} 0 0 1 ${rx} ${ry}v${rnd(h - 2 * ry)}a${rx} ${ry} 0 0 1 ${-rx} ${ry}h${rnd(-(w - 2 * rx))}a${rx} ${ry} 0 0 1 ${-rx} ${-ry}v${rnd(-(h - 2 * ry))}a${rx} ${ry} 0 0 1 ${rx} ${-ry}Z`, closed: true }];
+      }
+      case 'line':
+        return [{ d: `M${g('x1')} ${g('y1')}L${g('x2')} ${g('y2')}`, closed: false }];
+      case 'polyline': case 'polygon': {
+        const p = (el.getAttribute('points') || '').trim().split(/[\s,]+/).map(Number).filter(v => !isNaN(v));
+        if (p.length < 4) return [];
+        let d = `M${p[0]} ${p[1]}`;
+        for (let k = 2; k + 1 < p.length; k += 2) d += `L${p[k]} ${p[k + 1]}`;
+        const closed = el.localName === 'polygon';
+        return [{ d: closed ? d + 'Z' : d, closed }];
+      }
+      default: return null;
+    }
+  }
+
+  /* SVG → 단순 도형 목록 (stroke 계열 아이콘 전용) */
+  function flatten(svg) {
+    const shapes = [];
+    const walk = (node, tr, fill) => {
+      for (const el of node.children) {
+        const t = el.localName;
+        if (['title', 'desc', 'metadata'].includes(t)) continue;
+        if (['opacity', 'fill-opacity', 'stroke-opacity'].some(a => el.hasAttribute(a))) throw new Error('opacity');
+        const tr2 = [tr, el.getAttribute('transform')].filter(Boolean).join(' ');
+        let f = el.getAttribute('fill'); if (f === null) f = fill;
+        if (t === 'g' || t === 'a') { walk(el, tr2, f); continue; }
+        const subs = shapeToSubs(el);
+        if (subs === null) throw new Error('unsupported ' + t);
+        if (!subs.length) continue;
+        shapes.push({ subs, transform: tr2, filled: f !== null && f !== undefined && !NONE.test(f) });
+      }
+    };
+    walk(svg, '', svg.getAttribute('fill'));
+    return shapes;
+  }
+
+  /* ── 채우기 모델: 중첩된 안쪽 도형은 '구멍', 열린 선은 채우지 않음 ── */
+  let measureSvg = null;
+  function bbox(d) {
+    if (!measureSvg) {
+      measureSvg = document.createElementNS(NS, 'svg');
+      measureSvg.setAttribute('style', 'position:absolute;width:0;height:0;visibility:hidden;pointer-events:none');
+      document.body.appendChild(measureSvg);
+    }
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d); measureSvg.appendChild(p);
+    const b = p.getBBox(); measureSvg.removeChild(p);
+    return b;
+  }
+
+  function getModel(icon) {
+    if (icon.model) return icon.model;
+    const pieces = []; let hasTransform = false;
+    icon.shapes.forEach(s => {
+      if (s.transform) hasTransform = true;
+      if (s.filled) return;
+      s.subs.forEach(sub => { if (sub.closed) pieces.push({ d: sub.d, transform: s.transform }); });
+    });
+    let valid = !hasTransform && pieces.length > 0;
+    if (valid) {
+      try {
+        const bb = pieces.map(p => bbox(p.d)), eps = 0.05;
+        const contains = (a, b) => a.x <= b.x + eps && a.y <= b.y + eps && a.x + a.width >= b.x + b.width - eps && a.y + a.height >= b.y + b.height - eps;
+        const inter = (a, b) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+        outer: for (let i = 0; i < bb.length; i++) for (let j = i + 1; j < bb.length; j++) {
+          if (inter(bb[i], bb[j]) && !(contains(bb[i], bb[j]) || contains(bb[j], bb[i]))) { valid = false; break outer; }
+        }
+      } catch (_) { valid = false; }
+    }
+    icon.model = { valid, pieces, fillD: valid ? pieces.map(p => p.d).join('') : '' };
+    return icon.model;
+  }
+
+  /* ══════════════════════════════════════════
+     3. 렌더링
+     ══════════════════════════════════════════ */
+  function renderIcon(icon, o) {
+    const size = o.size, color = o.color;
+    if (icon.type === 'fill') return renderFillType(icon, size, color);
+
+    let body = '';
+    if (o.style !== 'outline') {
+      const op = o.style === 'duotone' ? ' fill-opacity=".22"' : '';
+      const m = getModel(icon);
+      if (m.valid && m.fillD) {
+        body += `  <path d="${m.fillD}" fill="${color}"${op} fill-rule="evenodd" stroke="none"/>\n`;
+      } else {
+        m.pieces.forEach(p => {
+          body += `  <path d="${p.d}"${p.transform ? ` transform="${p.transform}"` : ''} fill="${color}"${op} stroke="none"/>\n`;
+        });
+      }
+    }
+    icon.shapes.forEach(s => {
+      body += `  <path d="${s.subs.map(x => x.d).join('')}"${s.transform ? ` transform="${s.transform}"` : ''}${s.filled ? ` fill="${color}"` : ''}/>\n`;
+    });
+    return `<svg xmlns="${NS}" width="${size}" height="${size}" viewBox="${icon.vb}" fill="none" stroke="${color}" stroke-width="${o.stroke}" stroke-linecap="round" stroke-linejoin="round">\n${body}</svg>`;
+  }
+
+  function renderFillType(icon, size, color) {
+    const svg = icon.svg.cloneNode(true);
+    svg.setAttribute('width', size); svg.setAttribute('height', size);
+    svg.setAttribute('viewBox', icon.vb);
+    if (!svg.getAttribute('xmlns')) svg.setAttribute('xmlns', NS);
+    ['x', 'y', 'class', 'id'].forEach(a => svg.removeAttribute(a));
+
+    [svg, ...$$('*', svg)].forEach(el => {
+      ['fill', 'stroke'].forEach(a => {
+        const v = el.getAttribute(a);
+        if (v !== null && !NONE.test(v) && !/^url\(/i.test(v)) el.setAttribute(a, color);
       });
+      const st = el.getAttribute('style');
+      if (st) el.setAttribute('style', st.replace(/(fill|stroke)\s*:\s*([^;]+)/gi, (m, p, v) => (/none|url\(/i.test(v) ? m : `${p}:${color}`)));
+    });
+    $$('style', svg).forEach(s => { s.textContent = s.textContent.replace(/(fill|stroke)\s*:\s*(?!none|url)[^;}]+/gi, `$1:${color}`); });
+    if (!svg.hasAttribute('fill')) svg.setAttribute('fill', color);
+    return new XMLSerializer().serializeToString(svg);
+  }
+
+  const opts = () => state.cfg;
+
+  /* ══════════════════════════════════════════
+     4. 화면 그리기
+     ══════════════════════════════════════════ */
+  const COPY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+
+  function filtered() {
+    const q = state.cfg.q.trim().toLowerCase();
+    return q ? state.icons.filter(i => i.name.toLowerCase().includes(q)) : state.icons;
+  }
+
+  function renderAll() { renderGrid(); renderHero(); renderCounts(); }
+
+  function renderCounts() {
+    const total = state.icons.length, f = filtered().length;
+    $('#nav-count').textContent = total;
+    $('#stat-count').textContent = state.loading ? '…' : total;
+    $('#icon-count').textContent = state.loading ? '불러오는 중…'
+      : (state.cfg.q.trim() ? `${f} / ${total}개` : `총 ${total}개`);
+  }
+
+  function renderHero() {
+    const box = $('#hero-tiles');
+    const list = state.icons.slice(0, 12);
+    const o = { size: 30, stroke: 1.75, color: '#000000', style: 'outline' };
+    let html = '';
+    for (let i = 0; i < 12; i++) {
+      html += list[i]
+        ? `<div class="tile">${renderIcon(list[i], o)}</div>`
+        : `<div class="tile ghost"></div>`;
+    }
+    box.innerHTML = html;
+  }
+
+  function renderGrid() {
+    const grid = $('#grid'), status = $('#status');
+    status.innerHTML = '';
+
+    if (state.loading) {
+      grid.innerHTML = Array.from({ length: 18 }, () => '<div class="skel"></div>').join('');
+      return;
+    }
+    if (!state.icons.length) {
+      grid.innerHTML = '';
+      status.innerHTML = `
+        <div class="empty">
+          <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+          <h3>icons 폴더의 SVG를 불러오지 못했어요</h3>
+          <p>브라우저는 보안상 폴더 안의 파일 목록을 직접 읽을 수 없어요.
+             <b>icons/index.json</b>에 파일명 배열을 넣거나, 서버의 폴더 목록(autoindex)을 켜 두면 자동으로 불러옵니다.</p>
+          <pre>["home", "search", "user"]</pre>
+          <p style="margin-top:14px">지금 바로 확인하려면 폴더나 파일을 직접 선택하세요.<br>(<code>file://</code>로 열었을 때도 이 방법이 가장 확실해요.)</p>
+          <div class="row">
+            <button class="btn primary" type="button" data-pick="folder">icons 폴더 선택</button>
+            <button class="btn" type="button" data-pick="files">SVG 파일 선택</button>
+          </div>
+        </div>`;
+      return;
     }
 
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
+    const list = filtered();
+    if (!list.length) {
+      grid.innerHTML = '';
+      status.innerHTML = `<div class="empty"><h3>검색 결과가 없어요</h3><p>다른 키워드로 검색해 보세요.</p></div>`;
+      return;
+    }
+    const o = opts();
+    grid.innerHTML = list.map(icon => `
+      <div class="cell">
+        <button class="card" type="button" data-name="${esc(icon.name)}" title="${esc(icon.name)}.svg">
+          <span class="glyph">${renderIcon(icon, o)}</span>
+          <span class="nm">${esc(icon.name)}</span>
+        </button>
+        <button class="mini" type="button" data-copyname="${esc(icon.name)}" aria-label="${esc(icon.name)} 파일명 복사" title="파일명 복사">${COPY_SVG}</button>
+      </div>`).join('');
+  }
+
+  /* ── 모달 ── */
+  function openModal(name) {
+    const icon = state.icons.find(i => i.name === name);
+    if (!icon) return;
+    state.active = icon;
+    $('#m-title').textContent = `${icon.name}.svg`;
+    $('#m-sub').textContent = `icons/${icon.name}.svg`;
+    updateModal();
+    const m = $('#modal'); m.classList.add('open'); m.setAttribute('aria-hidden', 'false');
+  }
+  function closeModal() {
+    const m = $('#modal'); m.classList.remove('open'); m.setAttribute('aria-hidden', 'true');
+    state.active = null;
+  }
+  function updateModal() {
+    const icon = state.active; if (!icon) return;
+    const o = opts();
+    $('#m-preview').innerHTML = renderIcon(icon, { ...o, size: 96 });
+    $('#m-code').textContent = renderIcon(icon, o);
+    $('#m-meta').textContent = `${o.size}px · viewBox ${icon.vb}`;
+    const note = $('#m-note');
+    if (icon.type === 'fill') {
+      note.hidden = false;
+      note.textContent = '이 아이콘은 선(stroke)이 아닌 채움형 SVG라서 색상과 크기만 적용돼요. 스타일·선 두께 설정은 영향이 없어요.';
+    } else note.hidden = true;
+  }
+
+  /* ── 토스트 / 복사 ── */
+  let toastTimer;
+  function toast(msg) {
+    $('#toast-msg').textContent = msg;
+    const t = $('#toast'); t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+  }
+  async function copyText(text, msg) {
+    try { await navigator.clipboard.writeText(text); }
+    catch (_) {
+      const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (__) {} ta.remove();
+    }
+    toast(msg);
+  }
+
+  /* ══════════════════════════════════════════
+     5. 라우팅 / 이벤트
+     ══════════════════════════════════════════ */
+  function route() {
+    const h = location.hash;
+    const r = h.startsWith('#/icons') ? 'icons' : h.startsWith('#/terms') ? 'terms' : 'home';
+    $('#page-home').hidden = r !== 'home';
+    $('#page-icons').hidden = r !== 'icons';
+    $('#page-terms').hidden = r !== 'terms';
+    $$('.nav a').forEach(a => a.classList.toggle('active', a.dataset.route === r));
+    window.scrollTo(0, 0);
+    closeModal();
+  }
+
+  function setColor(v) {
+    v = String(v).trim(); if (!v.startsWith('#')) v = '#' + v;
+    if (!/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v)) { $('#color-text').value = state.cfg.color; return; }
+    if (v.length === 4) v = '#' + [...v.slice(1)].map(c => c + c).join('');
+    v = v.toUpperCase();
+    state.cfg.color = v;
+    $('#color').value = v.toLowerCase(); $('#color-text').value = v;
+    renderGrid(); updateModal();
+  }
+
+  function bind() {
+    window.addEventListener('hashchange', route);
+    window.addEventListener('scroll', () => $('#header').classList.toggle('scrolled', scrollY > 4), { passive: true });
+
+    // 검색
+    const search = $('#search');
+    search.addEventListener('input', e => {
+      state.cfg.q = e.target.value;
+      $('#search-box').classList.toggle('has-q', !!e.target.value);
+      renderGrid(); renderCounts();
+    });
+    $('#clear').addEventListener('click', () => { search.value = ''; search.dispatchEvent(new Event('input')); search.focus(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+      if (e.key === '/' && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName) && !$('#page-icons').hidden) {
+        e.preventDefault(); search.focus();
+      }
+    });
+
+    // 스타일
+    $('#style-seg').addEventListener('click', e => {
+      const b = e.target.closest('button[data-style]'); if (!b) return;
+      $$('#style-seg button').forEach(x => x.classList.toggle('on', x === b));
+      state.cfg.style = b.dataset.style;
+      renderGrid(); updateModal();
+    });
+
+    // 슬라이더
+    $('#size').addEventListener('input', e => {
+      state.cfg.size = +e.target.value; $('#size-val').textContent = e.target.value + 'px';
+      renderGrid(); updateModal();
+    });
+    $('#stroke').addEventListener('input', e => {
+      state.cfg.stroke = +e.target.value; $('#stroke-val').textContent = (+e.target.value).toFixed(2).replace(/0$/, '');
+      renderGrid(); updateModal();
+    });
+
+    // 색상
+    $('#color').addEventListener('input', e => setColor(e.target.value));
+    $('#color-text').addEventListener('change', e => setColor(e.target.value));
+    $('#swatches').addEventListener('click', e => { const b = e.target.closest('.swatch'); if (b) setColor(b.dataset.color); });
+
+    // 그리드 (이벤트 위임)
+    $('#grid').addEventListener('click', e => {
+      const cp = e.target.closest('[data-copyname]');
+      if (cp) { copyText(`icons/${cp.dataset.copyname}.svg`, `"${cp.dataset.copyname}" 파일명을 복사했어요`); return; }
+      const card = e.target.closest('.card');
+      if (card) openModal(card.dataset.name);
+    });
+
+    // 모달
+    $('#m-close').addEventListener('click', closeModal);
+    $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+    $('#m-copy').addEventListener('click', () => state.active && copyText(renderIcon(state.active, opts()), 'SVG 코드를 복사했어요'));
+    $('#m-dl').addEventListener('click', () => {
+      if (!state.active) return;
+      const blob = new Blob([renderIcon(state.active, opts())], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const a = Object.assign(document.createElement('a'), { href: url, download: `${state.active.name}.svg` });
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      toast(`${state.active.name}.svg 다운로드`);
+    });
+
+    // 파일/폴더 선택
+    const pf = $('#pick-files'), pd = $('#pick-folder');
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-pick]'); if (!b) return;
+      (b.dataset.pick === 'folder' ? pd : pf).click();
+    });
+    [pf, pd].forEach(inp => inp.addEventListener('change', async e => {
+      await addLocalFiles(e.target.files); e.target.value = '';
+    }));
+
+    // 드래그 앤 드롭
+    let depth = 0;
+    const drop = $('#drop');
+    window.addEventListener('dragenter', e => { if (e.dataTransfer && [...e.dataTransfer.types].includes('Files')) { depth++; drop.classList.add('on'); } });
+    window.addEventListener('dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) drop.classList.remove('on'); });
+    window.addEventListener('dragover', e => e.preventDefault());
+    window.addEventListener('drop', e => {
+      e.preventDefault(); depth = 0; drop.classList.remove('on');
+      if (e.dataTransfer && e.dataTransfer.files.length) addLocalFiles(e.dataTransfer.files);
+    });
+  }
+
+  bind();
+  route();
+  loadIcons();
+})();
+</script>
 </body>
 </html>
